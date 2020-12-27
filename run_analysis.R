@@ -56,24 +56,26 @@ names(data) <- c(Var_Names, "Activity")
 ##Extract measurements on mean and std 
 mean_vars <- grep( "[Mm]ean" ,names(data))
 std_vars <- grep( "std" ,names(data))
-mean_std_table <- data[,c(mean_vars,std_vars)]
+mean_std_table <- data[,c(mean_vars,std_vars,562)]
 
 
 ##Step 5
 
-## Read in Individual Label and combine with data
+## Read in Individual Label and combine with mean_std_table
 Individual_train <- read.table("train/subject_train.txt")
 Individual_test <- read.table("test/subject_test.txt")
 Combined <- c(Individual_train[,1], Individual_test[,1])
 Combined <- as.factor(Combined)
-data[,563] <- Combined
-data <- rename(data, "Subject" = "V563")
+mean_std_table[,88] <- Combined
+mean_std_table <- rename(mean_std_table, "Subject" = "V88")
 
 ## Group the variables by Subject and Activity
-data2 <- data %>% 
+data2 <- mean_std_table %>% 
   group_by(Activity, Subject) %>%
   summarise_all(mean)
 
 ## Exporting tidied data and summarized data
-write.table(data, "Cleaned_data.txt")
+write.table(mean_std_table, "Cleaned_data.txt")
+write.table(data2, "Summarised_Cleaned_data.txt")
+
 
